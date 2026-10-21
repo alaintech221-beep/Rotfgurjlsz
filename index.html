@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="author" content="DAFLIX TV">
+<meta name="copyright" content="© 2026 DAFLIX TV. Tous droits réservés.">
+<!-- © 2026 DAFLIX TV (dabflix-tv.netlify.app). Design, code et textes protégés : toute copie sera signalée à l'hébergeur. [daflix-sig-7f3a91c2] -->
+<script>
+/* Protection anti-copie : si cette page est servie depuis un autre domaine (copie ou miroir du site), le visiteur est renvoyé vers le site officiel. */
+(function(){var h=location.hostname,ok=["dabflix-tv.netlify.app","localhost","127.0.0.1"];
+if(ok.indexOf(h)<0&&!/--dabflix-tv\.netlify\.app$/.test(h)){document.documentElement.style.display="none";try{location.replace("https://dabflix-tv.netlify.app/");}catch(e){}}})();
+</script>
+<link rel="canonical" href="https://dabflix-tv.netlify.app/">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DAFLIX TV - Regarde tes chaînes en direct</title>
+<meta name="description" content="Regarde tes chaînes en direct sur DAFLIX TV, gratuitement.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="DAFLIX TV">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:title" content="DAFLIX TV - Regarde tes chaînes en direct">
+<meta property="og:description" content="Regarde tes chaînes en direct sur DAFLIX TV, gratuitement.">
+<meta property="og:image" content="https://dabflix-tv.netlify.app/apercu.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="DAFLIX TV - chaînes en direct">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://dabflix-tv.netlify.app/apercu.png">
+<style>
+:root{
+  --fond:#12141f; --carte:#1c1f2e; --bord:#2c3047;
+  --texte:#ebe8f2; --doux:#9a98ad; --accent:#e8507f;
+  --daflix-sig:"daflix-sig-7f3a91c2";
+}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+button,a{-webkit-user-select:none;user-select:none;touch-action:manipulation}
+body{background:var(--fond);color:var(--texte);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--bord)}
+.logo{font-weight:800;font-size:1.3rem;letter-spacing:.5px}
+.logo span{color:var(--accent)}
+a.logo{color:inherit;text-decoration:none}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:8px;padding:9px 16px;font-weight:600;font-size:.95rem;cursor:pointer}
+.btn:focus-visible,.chip:focus-visible,.chaine:focus-visible{outline:2px solid #fff;outline-offset:2px}
+main{max-width:960px;margin:0 auto;padding:16px}
+.lecteur{position:relative;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden;border:1px solid var(--bord)}
+.en-cours{display:flex;align-items:center;gap:8px;margin:12px 0 4px;font-weight:600}
+.en-cours[hidden]{display:none}
+.point{width:10px;height:10px;border-radius:50%;background:var(--accent);animation:pulse 1.6s infinite}
+@keyframes pulse{50%{opacity:.3}}
+.filtres{display:flex;gap:8px;overflow-x:auto;padding:12px 0;scrollbar-width:none}
+.chip{flex:none;background:var(--carte);color:var(--texte);border:1px solid var(--bord);border-radius:20px;padding:7px 14px;font-size:.9rem;cursor:pointer}
+.chip.actif{background:var(--accent);border-color:var(--accent);color:#fff}
+.grille{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+@media (min-width:640px){.grille{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}}
+.grille .vide{grid-column:1/-1}
+.chaine{background:var(--carte);border:1px solid var(--bord);border-radius:10px;padding:8px;text-align:left;color:var(--texte);cursor:pointer;font:inherit;min-width:0}
+.chaine:hover{border-color:var(--accent)}
+.chaine.actif{border-color:var(--accent);background:#2a1f2e}
+.chaine b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:.8rem;line-height:1.25}
+.chaine span{display:block;color:var(--doux);font-size:.68rem;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vide{color:var(--doux);padding:20px 0}
+.gauche{display:flex;align-items:center;gap:12px}
+.logo-chaine{width:100%;height:44px;object-fit:contain;margin-bottom:6px;border-radius:6px;background:var(--fond)}
+.logo-vide{display:flex;align-items:center;justify-content:center;width:100%;height:44px;margin-bottom:6px;border-radius:6px;background:var(--fond);font-size:1.25rem;font-weight:800;color:var(--accent)}
+.une{border-radius:14px;overflow:hidden;min-height:190px;margin-bottom:16px;display:flex;align-items:flex-end;background:linear-gradient(135deg,#3a2150,#12141f 70%);background-size:cover;background-position:center;border:1px solid var(--bord)}
+.une[hidden]{display:none}
+.une-texte{padding:18px;max-width:560px}
+.une small{color:var(--accent);font-weight:700;letter-spacing:1px;text-transform:uppercase}
+.une h2{font-size:1.5rem;line-height:1.2;margin:4px 0}
+.une p{color:#cfcbe0;margin-bottom:12px}
+.une .btn{display:inline-block;text-decoration:none}
+@media (prefers-reduced-motion:reduce){.point{animation:none}}
+.gauche{display:flex;align-items:center;gap:12px}
+.ic{width:20px;height:20px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.btn:focus-visible,.chip:focus-visible,.wa:focus-visible,.lien-fermer:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.contact{margin:auto;width:min(92vw,380px);background:var(--carte);color:var(--texte);border:1px solid var(--bord);border-radius:16px;padding:0}
+.contact::backdrop{background:rgba(0,0,0,.65)}
+.contact[open]{animation:apparait .2s ease-out}
+@keyframes apparait{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.contact-corps{padding:22px;display:flex;flex-direction:column;gap:14px}
+.contact h2{font-size:1.25rem;line-height:1.2}
+.contact p{color:var(--doux)}
+.wa{display:flex;align-items:center;justify-content:center;gap:10px;background:#25d366;color:#072b17;font-weight:700;border-radius:10px;padding:13px 16px;text-decoration:none}
+.wa:hover{background:#3be37c}
+.lien-fermer{background:none;border:1px solid var(--bord);color:var(--texte);border-radius:10px;padding:11px;font-size:.95rem;cursor:pointer}
+.lien-fermer:hover{border-color:var(--accent)}
+@media (prefers-reduced-motion:reduce){.contact[open]{animation:none}}
+.btn.gris{background:var(--carte);border:1px solid var(--bord);color:var(--texte)}
+.btn.mini{padding:7px 11px;font-size:.85rem}
+.actions-lecteur{display:flex;gap:8px;flex:none}
+.barre{flex-wrap:wrap}
+
+/* Lecteur fixe pendant le défilement : la liste des chaînes passe dessous */
+.haut{position:sticky;top:0;z-index:9;background:var(--fond)}
+.collant{position:sticky;top:var(--hh,72px);z-index:8;background:var(--fond);padding:8px 0 2px;margin-top:-8px}
+.collant .lecteur{width:min(100%,max(240px,calc((100vh - 230px - var(--hh,72px)) * 16 / 9)));width:min(100%,max(240px,calc((100dvh - 230px - var(--hh,72px)) * 16 / 9)));margin-inline:auto}
+.collant .lecteur.lt-plein{width:100%}
+.collant .en-cours{margin:8px 0 4px}
+.en-cours #nomChaine{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.en-cours .btn{flex:none}
+.reprise{margin:10px 0 0}
+.reprise[hidden]{display:none}
+.reprise .btn{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* EN DIRECT + zapping */
+.direct-pastille{flex:none;display:inline-flex;align-items:center;gap:6px;background:#e11d48;color:#fff;border-radius:999px;padding:3px 9px 3px 8px;font-size:.66rem;font-weight:800;letter-spacing:.6px}
+.direct-pastille i{width:7px;height:7px;border-radius:50%;background:#fff;animation:pulse 1.4s infinite}
+.zap{min-width:34px;font-size:1.15rem;line-height:1;padding:5px 10px}
+.zap:disabled{opacity:.35;cursor:default}
+@media (max-width:480px){.btn-txt{display:none}.en-cours{gap:6px}.en-cours .btn.mini{padding:6px 10px}}
+/* Écran d'accueil du lecteur aux couleurs du site */
+.lt.lt-vide{background:radial-gradient(ellipse at 50% 0%,#4a2a63 0%,#1b1730 45%,#0b0b12 100%)}
+.lt-vide .lt-msg{background:none}
+.lt-vide .lt-msg-corps::before{content:"DAFLIX TV";font-weight:900;letter-spacing:2px;font-size:clamp(1.2rem,7cqi,2rem);background:linear-gradient(90deg,#fff,#e8507f);-webkit-background-clip:text;background-clip:text;color:transparent}
+/* Badge « Nouveau » et bandeau d'annonce */
+.badge-nouveau{position:absolute;top:5px;left:5px;z-index:2;background:linear-gradient(90deg,#e8507f,#ff8a5c);color:#fff;font-size:.5rem;font-weight:800;letter-spacing:.5px;padding:2px 6px;border-radius:999px;pointer-events:none;box-shadow:0 2px 8px rgba(0,0,0,.35)}
+.annonce{display:flex;align-items:center;gap:10px;padding:9px 12px 9px 16px;background:linear-gradient(90deg,#4a2a63,#8a2f57);color:#fff;font-size:.9rem;line-height:1.35}
+.annonce[hidden]{display:none}
+.annonce .corps{flex:1;min-width:0;overflow-wrap:anywhere}
+.annonce a{color:#fff;font-weight:700;text-decoration:underline;margin-left:6px;white-space:nowrap}
+.annonce button{flex:none;background:rgba(255,255,255,.16);border:0;color:#fff;width:30px;height:30px;border-radius:50%;font-size:1.15rem;line-height:1;cursor:pointer}
+/* Titres de section, cartes plus vivantes, squelettes de chargement */
+.titre-sect{grid-column:1/-1;margin:6px 2px 0;font-size:.95rem;font-weight:700;color:var(--texte)}
+.chaine{transition:border-color .15s,transform .15s,background .15s}
+.chaine:active{transform:scale(.97)}
+@media (hover:hover){.chaine:hover{transform:translateY(-2px)}}
+.chaine .logo-vide{color:#fff}
+.grille.anime .enveloppe{animation:apparait .35s both;animation-delay:calc(var(--i,0) * 28ms)}
+@keyframes apparait{from{opacity:0;transform:translateY(10px)}}
+.coeur{transition:transform .15s,color .15s}
+.coeur.pop{animation:pop .4s}
+.grille .coeur{top:4px;right:4px;width:26px;height:26px;font-size:.95rem}
+@keyframes pop{40%{transform:scale(1.4)}}
+.squelette{height:98px;border-radius:10px;border:1px solid var(--bord);background:linear-gradient(90deg,var(--carte) 25%,#272b40 50%,var(--carte) 75%);background-size:200% 100%;animation:brille 1.3s linear infinite}
+@keyframes brille{to{background-position:-200% 0}}
+@media (prefers-reduced-motion:reduce){.direct-pastille i,.squelette,.grille.anime .enveloppe,.coeur.pop{animation:none}.chaine{transition:none}}
+
+/* Barre de navigation du bas */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:9;display:flex;background:var(--carte);border-top:1px solid var(--bord);padding-bottom:env(safe-area-inset-bottom)}
+.tabbar a{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:58px;padding:6px 2px;color:var(--doux);text-decoration:none;font-size:.72rem;font-weight:600;line-height:1.2}
+.tabbar a:hover{color:var(--texte)}
+.tabbar a[aria-current=page]{color:var(--accent)}
+.tabbar a:focus-visible{outline:2px solid #fff;outline-offset:-2px}
+.tabbar svg{width:22px;height:22px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+body{padding-bottom:calc(58px + env(safe-area-inset-bottom))}
+</style>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#12141f">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="player.css">
+</head>
+<body>
+
+<div class="annonce" id="annonce" role="status" hidden><span class="corps"><span id="annonceTexte"></span><a id="annonceLien" href="#" target="_blank" rel="noopener noreferrer" hidden>En savoir plus</a></span><button id="annonceFermer" type="button" aria-label="Fermer l'annonce">&times;</button></div>
+<div class="haut" id="haut">
+<header>
+  <div class="gauche">
+    <a class="logo" href="index.html" aria-label="DAFLIX TV, retour à l'accueil">DAFLIX <span>TV</span></a>
+  </div>
+  <div class="droite">
+    <button class="icone" id="btnRecherche" aria-label="Rechercher" aria-expanded="false"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg></button>
+    <a class="icone principal" href="don.html" id="btnDon" aria-label="Faire un don"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></a>
+  </div>
+</header>
+<div class="barre-recherche" id="barreRecherche" hidden>
+  <input class="recherche" id="recherche" type="search" placeholder="Rechercher une chaîne">
+  <button class="icone" id="fermerRecherche" aria-label="Fermer la recherche">&times;</button>
+</div>
+</div>
+
+
+<dialog class="contact" id="dlgContact" aria-labelledby="titreContact">
+  <div class="contact-corps">
+    <h2 id="titreContact">Nous contacter</h2>
+    <p>Une question, une idée ou un souci de lecture ? Écris-nous sur WhatsApp.</p>
+    <a class="wa" href="https://wa.link/fpp3vr" target="_blank" rel="noopener noreferrer"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>Écrire sur WhatsApp</a>
+    <button class="lien-fermer" id="fermerContact" type="button">Fermer</button>
+  </div>
+</dialog>
+
+<main>
+  <div class="collant">
+  <div class="lecteur" id="lecteur">
+    <video id="video" playsinline></video>
+  </div>
+
+  <div class="en-cours" id="enCours" hidden><span class="direct-pastille"><i></i>EN DIRECT</span><span id="nomChaine"></span><button class="btn gris mini zap" id="btnPrec" type="button" aria-label="Chaîne précédente" title="Chaîne précédente (←)" style="margin-left:auto">‹</button><button class="btn gris mini zap" id="btnSuiv" type="button" aria-label="Chaîne suivante" title="Chaîne suivante (→)">›</button><button class="btn gris mini" id="btnPartager" type="button" aria-label="Partager cette chaîne">↗<span class="btn-txt"> Partager</span></button><button class="btn gris mini" id="btnSignaler" type="button" aria-label="Signaler un problème">⚑<span class="btn-txt"> Signaler</span></button></div>
+  </div>
+
+  <div class="reprise" id="reprise" hidden><button class="btn mini" id="btnReprendre" type="button"></button></div>
+
+  <div class="filtres" id="filtres"></div>
+  <div class="grille" id="grille"></div>
+</main>
+
+<script>
+// Code partagé (favoris + installation)
+function lireFavs(cle){ try { return JSON.parse(localStorage.getItem("favoris-" + cle)) || []; } catch (e) { return []; } }
+function ecrireFavs(cle, a){ try { localStorage.setItem("favoris-" + cle, JSON.stringify(a)); } catch (e) {} }
+
+// Ajoute un bouton cœur sur une carte. "apres" est appelé après chaque changement.
+function envelopper(carte, cle, nom, apres){
+  const w = document.createElement("div");
+  w.className = "enveloppe";
+  const h = document.createElement("button");
+  h.className = "coeur";
+  h.setAttribute("aria-label", "Ajouter ou retirer des favoris");
+  const maj = () => { const on = lireFavs(cle).includes(nom); h.textContent = on ? "\u2665" : "\u2661"; h.classList.toggle("on", on); };
+  h.onclick = () => {
+    const a = lireFavs(cle), i = a.indexOf(nom);
+    if (i >= 0) a.splice(i, 1); else a.push(nom);
+    ecrireFavs(cle, a); maj(); if (a.includes(nom)){ h.classList.remove("pop"); void h.offsetWidth; h.classList.add("pop"); }
+    if (apres) apres();
+    if (window.toast) toast(a.includes(nom) ? "Ajouté aux favoris" : "Retiré des favoris");
+  };
+  maj();
+  w.append(carte, h);
+  return w;
+}
+
+// Style des ajouts
+const st = document.createElement("style");
+st.textContent = ".recherche{flex:1;min-width:0;background:#1c1f2e;color:#ebe8f2;border:1px solid #2c3047;border-radius:10px;padding:11px 14px;font-size:1rem;margin:0}"
++ ".droite{display:flex;align-items:center;gap:8px}"
++ ".icone{flex:none;width:42px;height:42px;display:flex;align-items:center;justify-content:center;background:#1c1f2e;border:1px solid #2c3047;color:#ebe8f2;border-radius:50%;font-size:1.5rem;line-height:1;cursor:pointer;text-decoration:none;transition:transform .15s,border-color .15s}"
++ ".icone:hover{border-color:#e8507f}.icone:active{transform:scale(.92)}"
++ ".icone.principal{background:linear-gradient(135deg,#e8507f,#a23fd1);border:0;color:#fff;box-shadow:0 4px 14px rgba(232,80,127,.4)}"
++ "@media (prefers-reduced-motion:reduce){.icone{transition:none}}"
++ ".icone:focus-visible{outline:2px solid #fff}.icone[aria-expanded=true]{border-color:#e8507f;color:#e8507f;background:#2a1f2e}"
++ ".barre-recherche{display:flex;gap:8px;padding:10px 16px;border-bottom:1px solid #2c3047;background:#12141f}"
++ ".barre-recherche[hidden]{display:none}"
++ ".recherche:focus-visible{outline:2px solid #e8507f}"
++ ".enveloppe{position:relative}.enveloppe>button:not(.coeur){width:100%;height:100%}"
++ ".coeur{position:absolute;top:6px;right:6px;width:34px;height:34px;border-radius:50%;border:0;background:rgba(18,20,31,.75);color:#ebe8f2;font-size:1.2rem;cursor:pointer}"
++ ".coeur.on{color:#e8507f}.coeur:focus-visible{outline:2px solid #fff}"
++ "#btnInstaller{position:fixed;right:16px;bottom:100px;z-index:5;box-shadow:0 2px 10px rgba(0,0,0,.5)}";
+document.head.appendChild(st);
+
+// Bouton loupe : ouvre et ferme la barre de recherche
+const btnR = document.getElementById("btnRecherche"), barreR = document.getElementById("barreRecherche"), champ = document.getElementById("recherche");
+if (btnR && barreR && champ){
+  const ouvrir = o => {
+    barreR.hidden = !o; btnR.setAttribute("aria-expanded", o);
+    if (o) champ.focus();
+    else if (champ.value){ champ.value = ""; champ.dispatchEvent(new Event("input")); }
+  };
+  btnR.onclick = () => ouvrir(barreR.hidden);
+  document.getElementById("fermerRecherche").onclick = () => ouvrir(false);
+}
+
+// Contenu géré depuis la page admin (lu dans la base ; garde une copie pour l'ouverture rapide)
+const BASE_DONNEES = "https://youtv-4874c-default-rtdb.firebaseio.com";
+// App Check : la base ne répond qu'aux appels vérifiés venant de ce site (clé de site publique, reCAPTCHA Enterprise)
+const CONFIG_FIREBASE = {
+  apiKey: "AIzaSyBkabFWK7NG6hE-z2FblBsCLhNxCjqxFP8",
+  authDomain: "youtv-4874c.firebaseapp.com",
+  databaseURL: BASE_DONNEES,
+  projectId: "youtv-4874c",
+  appId: "1:144516928306:web:0b2ee0cea9534f3324bd2b"
+};
+const CLE_RECAPTCHA = "6Le85vItAAAAAEOC7oHnWA4-oSM30-DNIfMApbIN";
+let _lectureBase = null;
+function lireBase(cle){
+  if (!_lectureBase) _lectureBase = (async () => {
+    const base = "https://www.gstatic.com/firebasejs/10.12.2/";
+    const { initializeApp } = await import(base + "firebase-app.js");
+    const { initializeAppCheck, ReCaptchaEnterpriseProvider } = await import(base + "firebase-app-check.js");
+    const { getDatabase, ref, get } = await import(base + "firebase-database.js");
+    const app = initializeApp(CONFIG_FIREBASE);
+    initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider(CLE_RECAPTCHA), isTokenAutoRefreshEnabled: true });
+    const db = getDatabase(app);
+    return async c => { const sn = await get(ref(db, "contenus/" + c)); return sn.exists() ? sn.val() : null; };
+  })();
+  return _lectureBase.then(lire => lire(cle));
+}
+// Plan B si le kit Firebase ne peut pas se charger (extension qui bloque Google, réseau filtré...)
+function lireDirect(cle){
+  return fetch(BASE_DONNEES + "/contenus/" + cle + ".json", { cache: "no-store" }).then(r => r.ok ? r.json() : null);
+}
+function chargerContenu(cle, tableau, afficher){
+  const appliquer = l => { tableau.splice(0, tableau.length, ...l); afficher(); };
+  try { const c = JSON.parse(localStorage.getItem("contenu-" + cle)); if (Array.isArray(c)) appliquer(c); } catch (e) {}
+  lireBase(cle).catch(() => lireDirect(cle))
+    .then(d => {
+      if (!d || typeof d !== "object") return;
+      const l = d.liste ? (Array.isArray(d.liste) ? d.liste : Object.values(d.liste)) : [];
+      const propre = l.filter(x => x && !x.masque);
+      try { localStorage.setItem("contenu-" + cle, JSON.stringify(propre)); } catch (e) {}
+      appliquer(propre);
+    }).catch(() => {});
+}
+
+// Bandeau d'annonce (géré depuis l'admin) : fermable, et il réapparaît si le message change
+function montrerAnnonce(a){
+  const zone = document.getElementById("annonce");
+  const texte = a && typeof a.texte === "string" ? a.texte.trim() : "";
+  const aujourdhui = new Date(); const jour = aujourdhui.getFullYear() + "-" + String(aujourdhui.getMonth() + 1).padStart(2, "0") + "-" + String(aujourdhui.getDate()).padStart(2, "0");
+  const expire = a && typeof a.fin === "string" && a.fin && jour > a.fin;
+  let fermee = null;
+  try { fermee = localStorage.getItem("annonce-fermee"); } catch (e) {}
+  const cle = texte + "|" + (a && a.maj || "");
+  if (!a || a.actif !== "oui" || !texte || expire || fermee === cle){ zone.hidden = true; return; }
+  document.getElementById("annonceTexte").textContent = texte;
+  const lien = document.getElementById("annonceLien");
+  if (typeof a.lien === "string" && /^https:\/\//i.test(a.lien.trim())){ lien.href = a.lien.trim(); lien.hidden = false; } else { lien.hidden = true; }
+  document.getElementById("annonceFermer").onclick = () => { zone.hidden = true; try { localStorage.setItem("annonce-fermee", cle); } catch (e) {} };
+  zone.hidden = false;
+}
+function chargerAnnonce(){
+  try { montrerAnnonce(JSON.parse(localStorage.getItem("contenu-annonce"))); } catch (e) {}
+  lireBase("annonce").catch(() => lireDirect("annonce")).then(d => {
+    try { localStorage.setItem("contenu-annonce", JSON.stringify(d && typeof d === "object" ? d : null)); } catch (e) {}
+    montrerAnnonce(d);
+  }).catch(() => {});
+}
+
+// Signaler un lien qui ne marche pas : ouvre WhatsApp. Si NUMERO_WHATSAPP est rempli, le message est déjà écrit ;
+// sinon le message est copié et WhatsApp s'ouvre : il suffit de le coller.
+const NUMERO_WHATSAPP = "";   // exemple : "221770000000" (indicatif du pays + numéro, sans + ni espaces)
+function retourBouton(b){
+  return t => { const avant = b.dataset.t || (b.dataset.t = b.innerHTML); b.textContent = t; setTimeout(() => { b.innerHTML = avant; }, 3000); };
+}
+function signaler(type, nom, retour){
+  if (!nom) return;
+  const msg = "Signalement DAFLIX TV : le lien " + type + " « " + nom + " » ne fonctionne pas. Page : " + location.href;
+  const num = NUMERO_WHATSAPP.replace(/\D/g, "");
+  if (num){ window.open("https://wa.me/" + num + "?text=" + encodeURIComponent(msg), "_blank", "noopener"); retour("Merci ✓"); return; }
+  window.open(typeof LIEN_WHATSAPP === "string" ? LIEN_WHATSAPP : "https://wa.link/fpp3vr", "_blank", "noopener");
+  const invite = () => prompt("Copie ce message et colle-le dans WhatsApp :", msg);
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(msg).then(() => retour("Message copié ✓"), invite);
+  else invite();
+}
+
+// Installation sur l'écran d'accueil + mode hors ligne
+let invite = null;
+window.addEventListener("beforeinstallprompt", e => {
+  e.preventDefault(); invite = e;
+  const b = document.createElement("button");
+  b.id = "btnInstaller"; b.className = "btn"; b.textContent = "Installer l'application";
+  b.onclick = () => { invite.prompt(); b.remove(); };
+  document.body.appendChild(b);
+});
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(() => {});
+</script>
+<script src="player.js"></script>
+<script>
+// Ajoute tes chaînes ici. "logo" = lien d'une image png ou jpg. Laisse "url" vide tant que tu n'as pas de flux.
+const chaines = [
+  // Exemple (retire les // pour l'utiliser) :
+  // { nom: "Ma Chaîne", logo: "", categorie: "Sport", url: "https://..." },
+];
+
+const video = document.getElementById("video");
+const grille = document.getElementById("grille");
+const filtres = document.getElementById("filtres");
+const enCours = document.getElementById("enCours");
+const nomChaine = document.getElementById("nomChaine");
+let categorieActive = "Toutes";
+let chaineActive = null;
+let animer = true, chargementFini = false, ordreZap = [];
+
+const zoneLecteur = document.getElementById("lecteur");
+const lecteur = new LecteurTV(zoneLecteur, video);
+lecteur.accueil("Choisis une chaîne", "Touche une chaîne dans la liste pour la lancer.");
+
+
+function afficherFiltres(){
+  const cats = ["Toutes", "Favoris", ...new Set(chaines.map(c => c.categorie))];
+  filtres.innerHTML = "";
+  cats.forEach(cat => {
+    const b = document.createElement("button");
+    b.className = "chip" + (cat === categorieActive ? " actif" : "");
+    b.textContent = cat;
+    b.onclick = () => { categorieActive = cat; animer = true; afficherFiltres(); afficherChaines(); };
+    filtres.appendChild(b);
+  });
+}
+
+function creerLogo(c){
+  const vide = () => { const d = document.createElement("div"); d.className = "logo-vide"; d.textContent = c.nom.charAt(0); const t = [...c.nom].reduce((a, ch) => (a * 31 + ch.charCodeAt(0)) % 360, 7); d.style.background = "linear-gradient(135deg,hsl(" + t + ",55%,32%),hsl(" + ((t + 40) % 360) + ",60%,18%))"; return d; };
+  if (!c.logo) return vide();
+  const img = document.createElement("img");
+  img.className = "logo-chaine"; img.src = c.logo; img.alt = c.nom; img.loading = "lazy";
+  img.onerror = () => img.replaceWith(vide());
+  return img;
+}
+
+const sansAccent = t => String(t == null ? "" : t).normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+const estNouveau = c => c.nouveau === "oui" || (c.nouveau !== "non" && typeof c.ajoute === "number" && Date.now() - c.ajoute < 7 * 864e5);
+function afficherChaines(){
+  grille.innerHTML = "";
+  grille.classList.toggle("anime", animer); animer = false;
+  const terme = sansAccent(document.getElementById("recherche").value.trim());
+  const favs = lireFavs("chaines");
+  const liste = chaines.filter(c => (categorieActive === "Toutes" || (categorieActive === "Favoris" ? favs.includes(c.nom) : c.categorie === categorieActive)) && sansAccent(c.nom).includes(terme));
+  if (!liste.length){
+    ordreZap = []; majZap();
+    if (!chaines.length && !chargementFini){
+      for (let k = 0; k < 9; k++){ const q = document.createElement("div"); q.className = "squelette"; grille.appendChild(q); }
+    } else {
+      grille.innerHTML = '<p class="vide">' + (chaines.length ? (categorieActive === "Favoris" ? "Touche le cœur d'une chaîne pour l'ajouter à tes favoris." : "Aucune chaîne trouvée.") : "Les chaînes arrivent bientôt.") + '</p>';
+    }
+    return;
+  }
+  let i = 0;
+  const ajouter = c => {
+    const b = document.createElement("button");
+    b.className = "chaine" + (chaineActive && c.nom === chaineActive.nom ? " actif" : "");
+    b.innerHTML = "<b></b><span></span>";
+    b.prepend(creerLogo(c));
+    b.querySelector("b").textContent = c.nom;
+    b.querySelector("span").textContent = c.categorie;
+    b.onclick = () => lancer(c);
+    const w = envelopper(b, "chaines", c.nom, () => { if (categorieActive === "Favoris" || categorieActive === "Toutes") afficherChaines(); });
+    w.style.setProperty("--i", Math.min(i++, 12));
+    if (estNouveau(c)){ const bn = document.createElement("span"); bn.className = "badge-nouveau"; bn.textContent = "NOUVEAU"; w.appendChild(bn); }
+    grille.appendChild(w);
+  };
+  const titre = t => { const h = document.createElement("h2"); h.className = "titre-sect"; h.textContent = t; grille.appendChild(h); };
+  if (categorieActive === "Toutes" && !terme && liste.some(c => favs.includes(c.nom))){
+    const f = liste.filter(c => favs.includes(c.nom)), r = liste.filter(c => !favs.includes(c.nom));
+    titre("♥ Mes favoris"); f.forEach(ajouter);
+    if (r.length){ titre("Toutes les chaînes"); r.forEach(ajouter); }
+    ordreZap = [...f, ...r];
+  } else {
+    liste.forEach(ajouter);
+    ordreZap = liste;
+  }
+  majZap();
+}
+
+// Zapping : chaîne précédente / suivante dans l'ordre affiché (les chaînes sans flux sont sautées)
+function majZap(){
+  const off = ordreZap.filter(c => c.url).length < 2;
+  const p = document.getElementById("btnPrec"), n = document.getElementById("btnSuiv");
+  if (p) p.disabled = off;
+  if (n) n.disabled = off;
+}
+function zapper(d){
+  const L = ordreZap.length;
+  if (L < 2) return;
+  let i = chaineActive ? ordreZap.findIndex(c => c.nom === chaineActive.nom) : -1;
+  for (let k = 0; k < L; k++){
+    i = i < 0 ? (d > 0 ? 0 : L - 1) : (i + d + L) % L;
+    if (ordreZap[i].url){ lancer(ordreZap[i]); return; }
+  }
+}
+document.getElementById("btnPrec").onclick = () => zapper(-1);
+document.getElementById("btnSuiv").onclick = () => zapper(1);
+document.addEventListener("keydown", e => {
+  if (e.ctrlKey || e.metaKey || e.altKey || e.shiftKey) return;
+  if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+  const t = e.target;
+  if (zoneLecteur.contains(t) || (t && /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)) || document.querySelector("dialog[open]")) return;
+  if (!chaineActive) return;
+  e.preventDefault(); zapper(e.key === "ArrowRight" ? 1 : -1);
+});
+
+// Une chaîne dont l'url est "auto:mbozo" récupère son lien m3u8 automatiquement (voir netlify/functions/flux.js)
+async function lireChaine(c){
+  let url = c.url;
+  if (/^auto:/i.test(url)){
+    try {
+      const r = await fetch("/.netlify/functions/flux?id=" + encodeURIComponent(url.slice(5).trim()), { cache: "no-store" });
+      const d = await r.json();
+      if (!d.url) throw new Error(d.erreur || "pas de lien");
+      url = d.url;
+    } catch (e) {
+      lecteur.accueil(c.nom, "Le flux est indisponible pour le moment. Réessaie dans un instant.");
+      return;
+    }
+  }
+  lecteur.lire(url, { titre: c.nom, logo: c.logo });
+}
+// Si le lien automatique expire en cours de lecture, on en redemande un nouveau
+video.addEventListener("error", () => { if (chaineActive && /^auto:/i.test(chaineActive.url || "")) setTimeout(() => lireChaine(chaineActive), 2500); });
+
+function lancer(c){
+  chaineActive = c;
+  try { localStorage.setItem("derniere-chaine", c.nom); } catch (e) {}
+  document.getElementById("reprise").hidden = true;
+  enCours.hidden = false;
+  nomChaine.textContent = c.nom;
+  if (!c.url){
+    lecteur.accueil(c.nom, "Aucun flux n'est encore ajouté pour cette chaîne.");
+  } else {
+    lireChaine(c);
+  }
+  // Sur téléphone, la liste est plus bas : on ramène le lecteur à l'écran
+  const r = zoneLecteur.getBoundingClientRect();
+  if (r.top < 0 || r.bottom > innerHeight) zoneLecteur.scrollIntoView({ behavior: matchMedia("(prefers-reduced-motion:reduce)").matches ? "auto" : "smooth", block: "start" });
+  afficherChaines();
+}
+
+// Reprendre la dernière chaîne regardée (le lancement automatique est bloqué par les navigateurs : un clic est nécessaire)
+function afficherReprise(){
+  const zone = document.getElementById("reprise");
+  let nom = null;
+  try { nom = localStorage.getItem("derniere-chaine"); } catch (e) {}
+  const c = nom && chaines.find(x => x.nom === nom);
+  if (!c || chaineActive){ zone.hidden = true; return; }
+  const b = document.getElementById("btnReprendre");
+  b.textContent = "▶ Reprendre : " + c.nom;
+  b.onclick = () => lancer(c);
+  zone.hidden = false;
+}
+
+// Lien direct : ?chaine=Nom ouvre cette chaîne
+let lienTraite = false;
+function ouvrirLienDirect(){
+  if (lienTraite) return;
+  let nom = null;
+  try { nom = new URLSearchParams(location.search).get("chaine"); } catch (e) {}
+  if (!nom){ lienTraite = true; return; }
+  const c = chaines.find(x => x.nom.toLowerCase() === nom.toLowerCase());
+  if (c){ lienTraite = true; lancer(c); }
+}
+
+// Partager la chaîne en cours (menu de partage du téléphone, sinon copie du lien)
+const btnPartager = document.getElementById("btnPartager");
+btnPartager.onclick = async () => {
+  if (!chaineActive) return;
+  const retour = retourBouton(btnPartager);
+  const lien = location.origin + location.pathname.replace(/index\.html$/, "") + "?chaine=" + encodeURIComponent(chaineActive.nom);
+  const data = { title: "DAFLIX TV", text: "Regarde " + chaineActive.nom + " en direct sur DAFLIX TV", url: lien };
+  if (navigator.share){
+    try { await navigator.share(data); return; } catch (e) { if (e && e.name === "AbortError") return; }
+  }
+  try { await navigator.clipboard.writeText(lien); retour("Lien copié ✓"); }
+  catch (e) { window.prompt("Copie ce lien :", lien); }
+};
+
+const btnSignaler = document.getElementById("btnSignaler");
+btnSignaler.onclick = () => signaler("de la chaîne", document.getElementById("nomChaine").textContent, retourBouton(btnSignaler));
+document.getElementById("recherche").oninput = afficherChaines;
+afficherFiltres();
+afficherChaines();
+chargerAnnonce();
+setTimeout(() => { chargementFini = true; if (!chaines.length) afficherChaines(); }, 8000);
+chargerContenu("chaines", chaines, () => { chargementFini = true; animer = true; categorieActive = "Toutes"; afficherFiltres(); afficherChaines(); ouvrirLienDirect(); afficherReprise(); });
+
+const dlg = document.getElementById("dlgContact");
+
+document.getElementById("fermerContact").onclick = () => dlg.close();
+dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+</script>
+
+<nav class="tabbar" aria-label="Navigation du bas">
+  <a href="index.html" data-page="index"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="7" width="20" height="15" rx="2"/><path d="M17 2l-5 5-5-5"/></svg><span>Chaînes</span></a>
+  <a href="don.html" data-page="don"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg><span>Don</span></a>
+  <a href="https://wa.link/fpp3vr" data-info="contact" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg><span>Contact</span></a>
+  <a href="conditions.html" data-page="conditions"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h8"/></svg><span>Conditions</span></a>
+</nav>
+<script>
+(function(){
+  var p=(location.pathname.split("/").pop()||"index").replace(/\.html$/i,"");
+  var d=document.getElementById("dlgContact");
+  document.querySelectorAll(".tabbar a[data-page]").forEach(function(a){ if(a.dataset.page===p) a.setAttribute("aria-current","page"); });
+  document.querySelectorAll(".tabbar a[data-info=contact]").forEach(function(a){
+    a.addEventListener("click",function(e){ if(d&&d.showModal){ e.preventDefault(); d.showModal(); } });
+  });
+})();
+</script>
+<script>
+(function(){
+  var h=document.getElementById("haut"); if(!h) return;
+  function m(){ document.documentElement.style.setProperty("--hh", h.offsetHeight + "px"); }
+  m(); addEventListener("resize", m);
+  if (window.ResizeObserver) new ResizeObserver(m).observe(h);
+})();
+</script>
+</body>
+</html>

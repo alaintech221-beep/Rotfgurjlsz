@@ -1,0 +1,20 @@
+# En-têtes de sécurité pour Netlify (ce fichier doit être à la racine du site)
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com https://www.google.com https://apis.google.com https://*.firebaseio.com https://*.firebasedatabase.app; style-src 'self' 'unsafe-inline'; img-src 'self' https: data: blob:; media-src 'self' https: blob: data:; connect-src 'self' https: wss: https://*.firebaseio.com wss://*.firebaseio.com https://*.firebasedatabase.app wss://*.firebasedatabase.app; frame-src https://www.google.com https://recaptcha.google.com https://*.firebaseapp.com https://apis.google.com https://*.firebaseio.com https://*.firebasedatabase.app; worker-src 'self' blob:; manifest-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+
+# La page admin ne doit jamais apparaître dans Google
+/admin.html
+  X-Robots-Tag: noindex, nofollow
+
+# Empêche un site copié de charger notre lecteur (player.js / player.css) directement chez nous
+/player.js
+  Cross-Origin-Resource-Policy: same-origin
+/player.css
+  Cross-Origin-Resource-Policy: same-origin
+/hls.min.js
+  Cross-Origin-Resource-Policy: same-origin
+  Cache-Control: public, max-age=604800
