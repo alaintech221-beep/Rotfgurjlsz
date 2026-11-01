@@ -182,13 +182,11 @@
       if (e.ctrlKey || e.metaKey || e.altKey) return;
       if (e.key === "Escape" && !self.menu.hidden) { self.menuOuvert(false); self.bReg.focus(); e.preventDefault(); return; }
       var k = e.key, t = e.target;
-      // Dans le menu des réglages : flèches haut/bas pour naviguer
       if (!self.menu.hidden && self.menu.contains(t) && (k === "ArrowDown" || k === "ArrowUp")) {
         var items = [].slice.call(self.menu.querySelectorAll("button")), i = items.indexOf(t);
         items[(i + (k === "ArrowDown" ? 1 : -1) + items.length) % items.length].focus();
         e.preventDefault(); return;
       }
-      // Les boutons gardent Entrée/Espace, les curseurs gardent les flèches
       if (t.closest && t.closest("button,[role=menuitemradio]") && (k === " " || k === "Enter")) return;
       if (t.tagName === "INPUT" && (k === " " || k.indexOf("Arrow") === 0 || k === "Home" || k === "End")) return;
       if (!self.menu.hidden && self.menu.contains(t)) return;
@@ -455,7 +453,6 @@
     var natif = !!(v.canPlayType && v.canPlayType("application/vnd.apple.mpegurl"));
     var hlsPossible = !!(global.MediaSource || global.ManagedMediaSource);
     var estHls = /m3u8/i.test(url);
-    // Ordre des méthodes : "natif" (l'appareil lit tout seul, sans contrainte CORS), "hls" (hls.js), "direct" (mp4, mp3...)
     this.methodes = estHls ? (natif ? (hlsPossible ? ["natif", "hls"] : ["natif"]) : (hlsPossible ? ["hls"] : ["natif"])) : (hlsPossible ? ["direct", "hls"] : ["direct"]);
     this.m = 0;
     this.metadonnees();
@@ -503,7 +500,6 @@
       v.src = url;
       jouer();
     }
-    // Lecture qui ne démarre pas : on passe à la méthode suivante
     if (this.m < this.methodes.length - 1) this.garde = setTimeout(function () { if (jeton === self.token && !self.jouant) self.echec(); }, 9000);
   };
 
@@ -521,7 +517,7 @@
     if (this.m < this.methodes.length - 1) { this.m++; this.demarrer(); return; }
     this.essais++;
     if (this.essais > 3) {
-      this.token++;   // ignore tout événement tardif
+      this.token++;
       if (this.hls) { try { this.hls.destroy(); } catch (e) {} this.hls = null; }
       this.erreurFinale = true; this.occuper(false); this.libererVeille();
       var off = global.navigator && navigator.onLine === false;
@@ -539,7 +535,6 @@
   P.relancer = function () {
     if (!this.url) return;
     clearTimeout(this.relance);
-    // Réessai manuel : une seule tentative franche (pas 3 tentatives lentes avant de savoir si ça marche)
     this.essais = 3; this.m = 0; this.reprisesMedia = 0; this.raison = "";
     this.demarrer();
   };
@@ -553,7 +548,6 @@
     this.reveiller();
   };
 
-  // Flux qui reste bloqué trop longtemps : on relance proprement
   P.armerVeille = function () {
     var self = this, jeton = this.token;
     clearTimeout(this.veille);
@@ -564,7 +558,6 @@
     }, 20000);
   };
 
-  /* ---------- Confort : écran allumé, commandes du système ---------- */
   P.prendreVeille = function () {
     var self = this;
     try {
