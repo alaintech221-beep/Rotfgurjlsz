@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>Dabflix Live</title>
+    <style>
+        body { background: #141414; color: white; font-family: sans-serif; text-align: center; padding-top: 50px; }
+        video { width: 80%; max-width: 800px; border-radius: 8px; background: black; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Dabflix - Direct</h1>
+    <video id="player" controls autoplay></video>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        fetch('stream.json')
+            .then(res => res.json())
+            .then(data => {
+                const video = document.getElementById('player');
+                if (Hls.isSupported()) {
+                    const hls = new Hls();
+                    hls.loadSource(data.url);
+                    hls.attachMedia(video);
+                } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                    video.src = data.url;
+                }
+            });
+    </script>
+</body>
+</html>
