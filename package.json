@@ -1,0 +1,13 @@
+{
+  "nom": "dabflix-tv",
+  "version": "1.0.0",
+  "description": "Serveur Netlify Functions pour DABFLIX TV",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Erreur : aucun test spécifié\" && exit 1"
+  },
+  "dépendances": {
+    "@sparticuz/chromium": "^121.0.0",
+    "puppeteer-core": "^21.6.0"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "/index.html",
+  "name": "DAFLIX TV",
+  "short_name": "DAFLIX TV",
+  "description": "Regarde tes chaînes en direct, gratuitement.",
+  "lang": "fr",
+  "start_url": "index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#12141f",
+  "theme_color": "#12141f",
+  "categories": [
+    "entertainment",
+    "video"
+  ],
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

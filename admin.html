@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="author" content="DAFLIX TV">
+<meta name="copyright" content="© 2026 DAFLIX TV. Tous droits réservés.">
+<!-- © 2026 DAFLIX TV (dabflix-tv.netlify.app). Design, code et textes protégés : toute copie sera signalée à l'hébergeur. [daflix-sig-7f3a91c2] -->
+<script>
+/* Protection anti-copie : si cette page est servie depuis un autre domaine (copie ou miroir du site), le visiteur est renvoyé vers le site officiel. */
+(function(){var h=location.hostname,ok=["dabflix-tv.netlify.app","localhost","127.0.0.1"];
+if(ok.indexOf(h)<0&&!/--dabflix-tv\.netlify\.app$/.test(h)){document.documentElement.style.display="none";try{location.replace("https://dabflix-tv.netlify.app/");}catch(e){}}})();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin - DAFLIX TV</title>
+<link rel="icon" href="icon-192.png">
+<style>
+:root{--fond:#12141f;--carte:#1c1f2e;--bord:#2c3047;--texte:#ebe8f2;--doux:#9a98ad;--accent:#e8507f}
+*{box-sizing:border-box;margin:0;-webkit-tap-highlight-color:transparent}
+button,a{touch-action:manipulation}
+body{background:var(--fond);color:var(--texte);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5;padding-bottom:90px}
+header{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 16px;border-bottom:1px solid var(--bord)}
+.logo{font-weight:800;font-size:1.3rem;color:inherit;text-decoration:none}
+.logo span{color:var(--accent)}
+.logo small{color:var(--doux);font-weight:600;font-size:.8rem;margin-left:6px}
+main{max-width:640px;margin:0 auto;padding:16px}
+.carte{background:var(--carte);border:1px solid var(--bord);border-radius:14px;padding:16px;margin-bottom:14px}
+h1{font-size:1.3rem;margin-bottom:4px}
+h2{font-size:1.05rem;margin-bottom:10px}
+.sous{color:var(--doux);font-size:.9rem;margin-bottom:12px}
+label{display:block;font-size:.88rem;margin:12px 0 4px}
+input,textarea,select{width:100%;background:var(--fond);color:var(--texte);border:1px solid var(--bord);border-radius:10px;padding:11px 13px;font:inherit;font-size:1rem}
+textarea{min-height:170px;resize:vertical}
+input:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid #fff;outline-offset:2px}
+.aide{color:var(--doux);font-size:.8rem;margin-top:4px}
+.btn{background:var(--accent);color:#fff;border:0;border-radius:10px;padding:11px 16px;font-weight:700;font-size:.95rem;cursor:pointer}
+.btn.gris{background:var(--fond);border:1px solid var(--bord);color:var(--texte)}
+.btn:disabled{opacity:.5;cursor:default}
+.plein{width:100%;margin-top:16px}
+.onglets{display:flex;gap:8px;overflow-x:auto;padding-bottom:12px;scrollbar-width:none}
+.onglet{flex:none;background:var(--carte);color:var(--texte);border:1px solid var(--bord);border-radius:20px;padding:8px 15px;cursor:pointer;font-size:.92rem}
+.onglet.actif{background:var(--accent);border-color:var(--accent);color:#fff}
+.item{display:flex;align-items:center;gap:8px;background:var(--carte);border:1px solid var(--bord);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.item .txt{flex:1;min-width:0}
+.item b{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.item span{color:var(--doux);font-size:.82rem}
+.petit{flex:none;width:36px;height:36px;border-radius:8px;border:1px solid var(--bord);background:var(--fond);color:var(--texte);cursor:pointer;font-size:.95rem}
+.petit.rouge{color:#ff8fa8}
+.item.masque .txt{opacity:.5}
+.item.glisse{position:relative;z-index:5;border-color:var(--accent);box-shadow:0 10px 28px rgba(0,0,0,.55);opacity:1}
+.glisseur{cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;font-size:1.15rem;line-height:1}
+.item.glisse .glisseur{cursor:grabbing}
+.vide{color:var(--doux);padding:14px 2px}
+.barre{position:fixed;left:0;right:0;bottom:0;background:var(--carte);border-top:1px solid var(--bord);padding:12px 16px;display:flex;align-items:center;gap:12px;z-index:5}
+.barre .etat{flex:1;font-size:.88rem;color:var(--doux)}
+.barre .etat.alerte{color:#ffd37a}
+.msg{min-height:1.3em;margin-top:10px;font-size:.9rem}
+.msg.erreur{color:#ff8fa8}
+.msg.ok{color:#8fe0b0}
+input[type=color]{height:46px;padding:4px}
+.cases{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.case{background:var(--carte);border:1px solid var(--bord);border-radius:12px;padding:16px;text-align:left;color:var(--texte);cursor:pointer;font:inherit;min-height:84px;transition:transform .15s,border-color .15s}
+.case:hover{border-color:var(--accent)}.case:active{transform:scale(.97)}
+.case b{display:block;font-size:1.05rem;margin-bottom:2px}
+.case span{color:var(--doux);font-size:.84rem}
+.entete-section{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.entete-section h2{margin:0;font-size:1.2rem}
+.bandeau{background:#3a1f2a;border:1px solid #ff8fa8;color:#ffd0da;border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:.9rem}
+.bandeau .btn{margin-top:10px}
+header .btn{padding:9px 12px;font-size:.88rem;white-space:nowrap}
+.pastille{flex:none;width:10px;height:10px;border-radius:50%;background:#777}
+.pastille.ok{background:#4cd48a}.pastille.non{background:#ff6b6b}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="index.html">DAFLIX <span>TV</span><small>Admin</small></a>
+  <div style="display:flex;gap:8px">
+    <a class="btn gris" id="lienSite" href="index.html" hidden style="text-decoration:none;display:inline-block">Voir le site</a>
+    <button class="btn gris" id="btnSortir" hidden>Déconnexion</button>
+  </div>
+</header>
+
+<main>
+  <section class="carte" id="vueLogin">
+    <h1>Espace admin</h1>
+    <p class="sous">Réservé au propriétaire du site.</p>
+    <form id="formLogin" novalidate>
+      <label for="email">Adresse e-mail</label>
+      <input id="email" type="email" autocomplete="email" inputmode="email">
+      <label for="mdp">Mot de passe</label>
+      <input id="mdp" type="password" autocomplete="current-password">
+      <button class="btn plein" id="btnLogin" type="submit">Se connecter</button>
+    </form>
+    <p class="msg" id="msgLogin" role="status"></p>
+  </section>
+
+  <section id="vueAdmin" hidden>
+    <div class="bandeau" id="bandeauErreur" role="alert" hidden>
+      <span id="txtBandeau"></span><br>
+      <button class="btn gris" id="btnReessayer" type="button">Réessayer</button>
+    </div>
+
+    <section id="accueilAdmin">
+      <h1>Que veux-tu gérer ?</h1>
+      <p class="sous">Choisis une section pour ajouter ou modifier du contenu.</p>
+      <div class="cases" id="cases"></div>
+    <section class="carte" id="carteAnnonce" style="margin-top:14px">
+      <h2>Bandeau d'annonce</h2>
+      <p class="sous">Un message affiché en haut du site (maintenance, nouvelle chaîne...). Les visiteurs peuvent le fermer.</p>
+      <label for="annTexte">Message</label>
+      <textarea id="annTexte" maxlength="200" style="min-height:76px"></textarea>
+      <label for="annLien">Lien (facultatif, https://...)</label>
+      <input id="annLien" type="url" autocapitalize="off" autocomplete="off">
+      <label for="annFin">Afficher jusqu'au (facultatif)</label>
+      <input id="annFin" type="date">
+      <label for="annActif">Affichage</label>
+      <select id="annActif"><option value="non">Masqué</option><option value="oui">Affiché sur le site</option></select>
+      <p class="aide">N'oublie pas de toucher « Enregistrer sur le site » en bas de l'écran.</p>
+    </section>
+    <section class="carte" id="carteSauv" style="margin-top:14px">
+      <h2>Sauvegarde</h2>
+      <p class="sous">Télécharge une copie de toutes tes listes et garde-la en lieu sûr : tu pourras tout remettre en cas d'erreur.</p>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn" id="btnExport" type="button">Exporter une sauvegarde</button>
+        <button class="btn gris" id="btnImport" type="button">Importer une sauvegarde</button>
+      </div>
+      <input type="file" id="fichierImport" accept=".json,application/json" hidden>
+      <p class="msg" id="msgSauv" role="status"></p>
+    </section>
+    </section>
+
+    <section id="vueSection" hidden>
+      <div class="entete-section">
+        <button class="btn gris" id="btnRetour" type="button">← Sections</button>
+        <h2 id="titreSection"></h2>
+      </div>
+
+    <section class="carte" id="reglagesDon" hidden>
+      <h2>Textes de la page de don</h2>
+      <label for="donTitre">Titre</label>
+      <input id="donTitre" type="text">
+      <label for="donTexte">Message</label>
+      <textarea id="donTexte" style="min-height:90px"></textarea>
+      <label for="donMerci">Remerciement</label>
+      <input id="donMerci" type="text">
+      <p class="aide">Tes moyens de paiement (Wave…) se gèrent dans la liste ci-dessous.</p>
+    </section>
+
+    <input id="rechercheAdmin" type="search" placeholder="Rechercher dans la liste" hidden style="margin-bottom:10px">
+    <div id="liste"></div>
+    <button class="btn plein" id="btnAjouter" type="button">+ Ajouter</button>
+
+    <section class="carte" id="carteForm" hidden style="margin-top:14px">
+      <h2 id="titreForm"></h2>
+      <div id="champs"></div>
+      <p class="msg erreur" id="msgForm" role="alert"></p>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <button class="btn" id="btnValider" type="button" style="flex:1">Valider</button>
+        <button class="btn gris" id="btnAnnuler" type="button">Annuler</button>
+      </div>
+    </section>
+
+    </section>
+  </section>
+</main>
+
+<div class="barre" id="barre" hidden>
+  <span class="pastille" id="pastille" title="Connexion à la base"></span>
+  <div class="etat" id="etat">Tout est enregistré.</div>
+  <button class="btn" id="btnSauver" type="button" disabled>Enregistrer sur le site</button>
+</div>
+
+<script type="module">
+const firebaseConfig = {
+  apiKey: "AIzaSyBkabFWK7NG6hE-z2FblBsCLhNxCjqxFP8",
+  authDomain: "youtv-4874c.firebaseapp.com",
+  databaseURL: "https://youtv-4874c-default-rtdb.firebaseio.com",
+  projectId: "youtv-4874c",
+  storageBucket: "youtv-4874c.firebasestorage.app",
+  messagingSenderId: "144516928306",
+  appId: "1:144516928306:web:0b2ee0cea9534f3324bd2b"
+};
+
+const $ = id => document.getElementById(id);
+
+// Les champs de chaque type (les noms doivent rester identiques à ceux des pages du site)
+const norm = t => String(t == null ? "" : t).normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim().toLowerCase();
+const types = {
+  chaines: { titre: "Chaînes", un: "chaîne", principal: "nom", avance: true, detail: x => x.categorie || "", champs: [
+    { cle: "nom", label: "Nom de la chaîne", obligatoire: true },
+    { cle: "categorie", label: "Catégorie (ex : Sport)", suggere: true },
+    { cle: "logo", label: "Logo (lien png ou jpg)", image: true },
+    { cle: "url", label: "Lien du flux (https://...)", flux: true, testable: true },
+    { cle: "nouveau", label: "Badge « Nouveau » sur le site", choix: [["auto", "Automatique (7 jours après l'ajout)"], ["oui", "Toujours afficher"], ["non", "Ne jamais afficher"]] } ] },
+  moyens: { titre: "Don", un: "moyen de don", art: "un", principal: "nom", detail: x => x.numero || (x.lien ? "Lien de paiement" : ""), champs: [
+    { cle: "nom", label: "Nom (ex : Wave)", obligatoire: true },
+    { cle: "numero", label: "Numéro à copier (facultatif)" },
+    { cle: "lien", label: "Lien de paiement (https://..., facultatif)", flux: true } ] }
+};
+
+// Valeurs affichées tant que rien n'a été enregistré (elles correspondent à celles du site)
+const DON_DEFAUT = { titre: "Soutenir DAFLIX TV", texte: "DAFLIX TV est gratuite. Si le site te plaît, tu peux m'aider à le garder en ligne avec un petit don.", merci: "Merci pour ton soutien ❤" };
+const PAR_DEFAUT = {
+  moyens: [ { nom: "Wave", numero: "", lien: "https://pay.wave.com/m/M_sn_1aEZGz9BnNJH/c/sn/" } ]
+};
+let reglagesDon = { ...DON_DEFAUT };
+const ANNONCE_DEFAUT = { texte: "", lien: "", fin: "", actif: "non" };
+let annonce = { ...ANNONCE_DEFAUT };
+const lireAnnonce = d => { const r = { ...ANNONCE_DEFAUT }; if (d && typeof d === "object") ["texte", "lien", "fin", "actif"].forEach(k => { if (typeof d[k] === "string") r[k] = d[k]; }); if (r.actif !== "oui") r.actif = "non"; return r; };
+function remplirAnnonce(){ $("annTexte").value = annonce.texte; $("annLien").value = annonce.lien; $("annFin").value = annonce.fin; $("annActif").value = annonce.actif; }
+[["annTexte", "texte"], ["annLien", "lien"], ["annFin", "fin"], ["annActif", "actif"]].forEach(([id, k]) => { $(id).oninput = $(id).onchange = () => { annonce[k] = $(id).value; modifies.add("annonce"); majEtat(); }; });
+
+let donnees = { chaines: [], moyens: [] };
+const modifies = new Set();
+let actif = null, edition = null, chargementOk = false, connecte = false;
+const debut = Date.now();
+const avecDelai = (promesse, ms) => Promise.race([promesse, new Promise((_, rej) => setTimeout(() => rej(Object.assign(new Error("délai"), { code: "delai" })), ms))]);
+
+// ----- Test d'un lien de flux depuis le navigateur (comme le fera le site)
+async function testerLien(url, el){
+  url = url.trim();
+  if (!/^https:\/\//i.test(url)){ dire(el, "Écris d'abord un lien commençant par https://", "erreur"); return; }
+  const hls = /m3u8/i.test(url);
+  dire(el, "Test en cours...");
+  const ctrl = new AbortController(), minuteur = setTimeout(() => ctrl.abort(), 10000);
+  try {
+    const r = await fetch(url, { signal: ctrl.signal, cache: "no-store" });
+    clearTimeout(minuteur);
+    if (!r.ok){ ctrl.abort(); dire(el, "Le serveur répond « " + r.status + " » : lien faux, expiré ou refusé.", "erreur"); return; }
+    if (hls || /mpegurl/i.test(r.headers.get("content-type") || "")){
+      const texte = (await r.text()).trim();
+      if (texte.startsWith("#EXTM3U")) dire(el, "✓ Playlist HLS lue : ce lien est lisible depuis ton site.", "ok");
+      else dire(el, "Le serveur répond, mais ce n'est pas une playlist HLS (.m3u8) valide.", "erreur");
+    } else {
+      ctrl.abort();
+      dire(el, "✓ Le serveur répond et autorise ton site. (Le test ne vérifie pas le format de la vidéo.)", "ok");
+    }
+  } catch (e) {
+    clearTimeout(minuteur);
+    if (e && e.name === "AbortError") dire(el, "Le serveur met trop de temps à répondre (plus de 10 s).", "erreur");
+    else if (hls) dire(el, "Impossible de lire ce lien depuis ton site : lien faux, serveur hors ligne, ou serveur qui n'autorise pas ton site (CORS). Dans ce cas, il ne marchera pas non plus dans le lecteur.", "erreur");
+    else dire(el, "Le test n'a pas pu lire ce lien (cela peut venir de CORS). Pour un fichier mp4 ou mp3 direct, la lecture peut quand même marcher : essaie-la sur le site.", "erreur");
+  }
+}
+
+
+const nomModif = c => c === "don" ? "Textes du don" : c === "annonce" ? "Bandeau d'annonce" : types[c].titre;
+function majEtat(){
+  const e = $("etat"), n = [...modifies].map(nomModif);
+  $("btnSauver").disabled = !n.length || !chargementOk;
+  e.className = "etat" + (n.length || !chargementOk ? " alerte" : "");
+  e.textContent = !chargementOk ? "Base illisible : enregistrement bloqué." : (n.length ? "Non enregistré : " + n.join(", ") : "Tout est enregistré.");
+}
+
+function rendreCases(){
+  const z = $("cases"); z.innerHTML = "";
+  Object.keys(types).forEach(c => {
+    const b = document.createElement("button"); b.type = "button"; b.className = "case";
+    const t = document.createElement("b"); t.textContent = types[c].titre;
+    const s = document.createElement("span"), n = donnees[c].length;
+    s.textContent = n + (n > 1 ? " éléments" : " élément") + (modifies.has(c) || (c === "moyens" && modifies.has("don")) ? " · à enregistrer" : "");
+    b.append(t, s); b.onclick = () => ouvrirSection(c); z.appendChild(b);
+  });
+}
+function ouvrirSection(c){ actif = c; $("rechercheAdmin").value = ""; fermerForm(); rendre(); window.scrollTo(0, 0); }
+
+function petit(txt, label, fn, cls){
+  const b = document.createElement("button");
+  b.className = "petit " + (cls || ""); b.type = "button"; b.textContent = txt; b.setAttribute("aria-label", label); b.onclick = fn;
+  return b;
+}
+
+function rendreListe(){
+  const t = types[actif], l = donnees[actif], zone = $("liste");
+  zone.innerHTML = "";
+  if (!l.length){ zone.innerHTML = '<p class="vide"></p>'; zone.firstChild.textContent = "Aucun élément. Touche « Ajouter » pour créer ta première " + t.un + "."; }
+  const terme = $("rechercheAdmin").value.trim().toLowerCase();
+  $("rechercheAdmin").hidden = !l.length;
+  let affiches = 0;
+  l.forEach((x, i) => {
+    if (terme && !((x[t.principal] || "") + " " + t.detail(x)).toLowerCase().includes(terme)) return;
+    affiches++;
+    const d = document.createElement("div"); d.className = "item" + (x.masque ? " masque" : ""); d.dataset.i = i;
+    const txt = document.createElement("div"); txt.className = "txt";
+    const b = document.createElement("b"); b.textContent = x[t.principal];
+    const s = document.createElement("span"); s.textContent = ((t.detail(x) || "") + (x.masque ? (t.detail(x) ? " · " : "") + "masquée du site" : "")) || " ";
+    txt.append(b, s);
+    const poignee = petit("⠿", "Déplacer : glisse, ou utilise les flèches haut et bas", () => {}, "glisseur");
+    poignee.onpointerdown = e => demarrerGlisse(e, d, poignee);
+    poignee.onkeydown = e => {
+      if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
+      e.preventDefault();
+      const dir = e.key === "ArrowUp" ? -1 : 1, j = i + dir;
+      if (j < 0 || j >= l.length) return;
+      deplacer(i, dir);
+      const nv = zone.querySelector('.item[data-i="' + j + '"] .glisseur'); if (nv) nv.focus();
+    };
+    d.append(txt,
+      ...(terme ? [] : [poignee]),
+      ...(t.avance ? [petit(x.masque ? "🙈" : "👁", x.masque ? "Afficher cette chaîne sur le site" : "Masquer cette chaîne du site", () => { if (x.masque) delete x.masque; else x.masque = true; modifies.add(actif); rendre(); })] : []),
+      petit("✎", "Modifier", () => ouvrirForm(i)),
+      petit("✕", "Supprimer", () => supprimer(i), "rouge"));
+    zone.appendChild(d);
+  });
+  if (terme && !affiches){ zone.innerHTML = '<p class="vide"></p>'; zone.firstChild.textContent = "Aucun résultat pour « " + terme + " »."; }
+}
+function rendre(){
+  const accueil = actif === null;
+  $("accueilAdmin").hidden = !accueil; $("vueSection").hidden = accueil;
+  if (accueil){ rendreCases(); majEtat(); return; }
+  $("titreSection").textContent = types[actif].titre;
+  rendreListe();
+  $("btnAjouter").textContent = "+ Ajouter " + (types[actif].art || "une") + " " + types[actif].un;
+  $("reglagesDon").hidden = actif !== "moyens";
+  majEtat();
+}
+function majConnexion(){
+  const p = $("pastille");
+  if (connecte){ p.className = "pastille ok"; p.title = "Connecté à la base"; }
+  else if (Date.now() - debut > 6000){ p.className = "pastille non"; p.title = "Pas connecté à la base"; }
+}
+setInterval(majConnexion, 2000);
+
+function deplacer(i, d){
+  const l = donnees[actif], j = i + d;
+  if (j < 0 || j >= l.length) return;
+  [l[i], l[j]] = [l[j], l[i]]; modifies.add(actif); rendre();
+}
+// Glisser-déposer (doigt ou souris) : la ligne suit le doigt, les autres s'écartent
+function demarrerGlisse(e, d, poignee){
+  if (e.button !== undefined && e.button !== 0) return;
+  e.preventDefault();
+  const zone = $("liste"), l = donnees[actif];
+  let i = +d.dataset.i; const depart = i;
+  let y = e.clientY, raf = 0, fini = false;
+  const dec = y - d.getBoundingClientRect().top;
+  try { poignee.setPointerCapture(e.pointerId); } catch (err) {}
+  d.classList.add("glisse");
+  const permuter = (p, q) => { const tmp = l[p]; l[p] = l[q]; l[q] = tmp; };
+  const suivre = () => {
+    d.style.transform = "none";
+    const h = d.offsetHeight;
+    for (;;){
+      const centre = (y - dec) + h / 2;
+      const prev = d.previousElementSibling, next = d.nextElementSibling;
+      const pr = prev && prev.getBoundingClientRect(), nr = next && next.getBoundingClientRect();
+      if (prev && centre < pr.top + pr.height / 2){ zone.insertBefore(d, prev); permuter(i, i - 1); i--; }
+      else if (next && centre > nr.top + nr.height / 2){ zone.insertBefore(next, d); permuter(i, i + 1); i++; }
+      else break;
+    }
+    d.style.transform = "translateY(" + ((y - dec) - d.getBoundingClientRect().top) + "px)";
+  };
+  const boucle = () => {
+    if (fini) return;
+    if (y < 90) window.scrollBy(0, -14); else if (y > window.innerHeight - 90) window.scrollBy(0, 14);
+    suivre(); raf = requestAnimationFrame(boucle);
+  };
+  const bouge = ev => { y = ev.clientY; };
+  const fin = () => {
+    fini = true; cancelAnimationFrame(raf);
+    poignee.removeEventListener("pointermove", bouge); poignee.removeEventListener("pointerup", fin); poignee.removeEventListener("pointercancel", fin);
+    if (i !== depart) modifies.add(actif);
+    rendre();
+  };
+  poignee.addEventListener("pointermove", bouge); poignee.addEventListener("pointerup", fin); poignee.addEventListener("pointercancel", fin);
+  boucle();
+}
+function supprimer(i){
+  const x = donnees[actif][i];
+  if (!confirm("Supprimer « " + x[types[actif].principal] + " » ?")) return;
+  donnees[actif].splice(i, 1); modifies.add(actif); fermerForm(); rendre();
+}
+
+// ----- Formulaire d'ajout et de modification
+function ouvrirForm(i){
+  const t = types[actif]; edition = i;
+  const x = i === -1 ? {} : donnees[actif][i];
+  $("titreForm").textContent = (i === -1 ? "Ajouter : " : "Modifier : ") + t.un;
+  $("msgForm").textContent = "";
+  const zone = $("champs"); zone.innerHTML = "";
+  t.champs.forEach(c => {
+    const lab = document.createElement("label"); lab.htmlFor = "f-" + c.cle; lab.textContent = c.label + (c.obligatoire ? " *" : "");
+    let inp;
+    if (c.choix){
+      inp = document.createElement("select");
+      c.choix.forEach(([val, txt]) => { const o = document.createElement("option"); o.value = val; o.textContent = txt; inp.appendChild(o); });
+      inp.value = x[c.cle] || c.choix[0][0];
+    } else {
+      inp = document.createElement("input");
+      inp.type = "text";
+      if (c.flux || c.image){ inp.type = "url"; inp.autocapitalize = "off"; inp.autocomplete = "off"; }
+      inp.value = x[c.cle] === undefined ? "" : x[c.cle];
+    }
+    inp.id = "f-" + c.cle;
+    zone.append(lab, inp);
+    if (c.suggere){
+      const vus = new Map();
+      donnees[actif].forEach(z => { const v = String(z[c.cle] || "").trim(); if (v && !vus.has(norm(v))) vus.set(norm(v), v); });
+      if (vus.size){
+        const ligne = document.createElement("div"); ligne.style.cssText = "display:flex;flex-wrap:wrap;gap:6px;margin-top:8px";
+        [...vus.values()].sort((p, q) => p.localeCompare(q, "fr")).forEach(v => {
+          const b = document.createElement("button"); b.type = "button"; b.className = "btn gris"; b.style.cssText = "padding:5px 11px;font-size:.85rem"; b.textContent = v;
+          b.onclick = () => { inp.value = v; inp.focus(); };
+          ligne.appendChild(b);
+        });
+        zone.appendChild(ligne);
+      }
+    }
+    if (c.testable){
+      const bt = document.createElement("button"); bt.type = "button"; bt.className = "btn gris"; bt.style.marginTop = "8px"; bt.textContent = "Tester ce lien";
+      const res = document.createElement("p"); res.className = "msg"; res.setAttribute("role", "status");
+      bt.onclick = () => testerLien(inp.value, res);
+      zone.append(bt, res);
+    }
+  });
+  $("carteForm").hidden = false; $("btnAjouter").hidden = true;
+  $("carteForm").scrollIntoView({ behavior: "smooth" });
+}
+function fermerForm(){ $("carteForm").hidden = true; $("btnAjouter").hidden = false; edition = null; }
+
+function valider(){
+  const t = types[actif], obj = edition === -1 ? {} : { ...donnees[actif][edition] };
+  if (edition === -1 && t.avance) obj.ajoute = Date.now();
+  for (const c of t.champs){
+    const v = $("f-" + c.cle).value.trim();
+    if (c.obligatoire && !v) return "Le champ « " + c.label + " » est obligatoire.";
+    if ((c.flux || c.image) && /^\s*javascript:/i.test(v)) return "Lien non autorisé : " + c.label;
+    if (c.flux && v && !/^https:\/\//i.test(v)) return "Le lien doit commencer par https:// (" + c.label + ").";
+    if (c.choix) obj[c.cle] = c.choix.some(o => o[0] === v) ? v : c.choix[0][0];
+    else if (c.suggere && v){
+      const ex = donnees[actif].find((z, k) => k !== edition && norm(String(z[c.cle] || "")) === norm(v));
+      obj[c.cle] = ex ? String(ex[c.cle]).trim() : v;
+    }
+    else obj[c.cle] = v;
+  }
+  if (edition === -1) donnees[actif].push(obj); else donnees[actif][edition] = obj;
+  modifies.add(actif); fermerForm(); rendre();
+  return "";
+}
+function remplirReglagesDon(){ $("donTitre").value = reglagesDon.titre; $("donTexte").value = reglagesDon.texte; $("donMerci").value = reglagesDon.merci; }
+[["donTitre", "titre"], ["donTexte", "texte"], ["donMerci", "merci"]].forEach(([id, k]) => { $(id).oninput = () => { reglagesDon[k] = $(id).value; modifies.add("don"); majEtat(); }; });
+$("rechercheAdmin").oninput = rendreListe;
+remplirReglagesDon();
+$("btnAjouter").onclick = () => ouvrirForm(-1);
+$("btnRetour").onclick = () => { fermerForm(); actif = null; rendre(); window.scrollTo(0, 0); };
+$("btnAnnuler").onclick = fermerForm;
+$("btnValider").onclick = () => { $("msgForm").textContent = valider(); };
+
+// ----- Firebase
+const erreurs = {
+  "auth/invalid-credential": "E-mail ou mot de passe incorrect.",
+  "auth/wrong-password": "E-mail ou mot de passe incorrect.",
+  "auth/user-not-found": "E-mail ou mot de passe incorrect.",
+  "auth/invalid-email": "Cette adresse e-mail n'est pas valide.",
+  "auth/missing-password": "Écris ton mot de passe.",
+  "auth/too-many-requests": "Trop d'essais. Attends un peu avant de réessayer.",
+  "auth/network-request-failed": "Pas de connexion internet.",
+  "auth/operation-not-allowed": "La connexion par e-mail est désactivée dans Firebase (Authentication > Méthode de connexion).",
+  "auth/invalid-api-key": "La clé Firebase (apiKey) est incorrecte."
+};
+const dire = (el, t, type) => { el.textContent = t; el.className = "msg " + (type || ""); };
+
+// ----- Sauvegarde : export et import
+function nettoyer(cle, liste){
+  let vides = 0; const res = [];
+  const lien = u => { u = String(u || "").trim(); if (u && !/^https:\/\//i.test(u)){ vides++; return ""; } return u; };
+  liste.forEach(x => {
+    if (!x || typeof x !== "object") return;
+    const o = {};
+    for (const c of types[cle].champs){
+      const v = x[c.cle];
+      if (c.choix){ o[c.cle] = c.choix.some(z => z[0] === String(v)) ? String(v) : c.choix[0][0]; }
+      else if (c.flux){ o[c.cle] = lien(v); }
+      else { let t = String(v == null ? "" : v).trim(); if (c.image && /^\s*javascript:/i.test(t)) t = ""; o[c.cle] = t; }
+    }
+    if (types[cle].avance){
+      if (x.masque === true) o.masque = true;
+      if (typeof x.ajoute === "number" && isFinite(x.ajoute)) o.ajoute = x.ajoute;
+    }
+    if (o[types[cle].principal]) res.push(o);
+  });
+  return { liste: res, vides };
+}
+$("btnExport").onclick = () => {
+  if (!chargementOk){ dire($("msgSauv"), "Impossible : tes listes n'ont pas pu être lues depuis la base. Réessaie d'abord.", "erreur"); return; }
+  const total = Object.values(donnees).reduce((n, l) => n + l.length, 0);
+  const contenu = JSON.stringify({ type: "ma-tv-sauvegarde", version: 1, date: new Date().toISOString(), donnees, don: reglagesDon, annonce }, null, 2);
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([contenu], { type: "application/json" }));
+  a.download = "ma-tv-sauvegarde-" + new Date().toISOString().slice(0, 10) + ".json";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 3000);
+  dire($("msgSauv"), "Sauvegarde téléchargée (" + total + " éléments).", "ok");
+};
+$("btnImport").onclick = () => $("fichierImport").click();
+$("fichierImport").onchange = async e => {
+  const f = e.target.files[0]; e.target.value = ""; if (!f) return;
+  try {
+    const d = JSON.parse(await f.text());
+    const src = d && d.type === "ma-tv-sauvegarde" && d.donnees && typeof d.donnees === "object" ? d.donnees : null;
+    if (!src) throw new Error("format");
+    const nouveau = {}; let total = 0, vides = 0;
+    for (const cle of Object.keys(types)){
+      if (!Array.isArray(src[cle])) continue;
+      const r = nettoyer(cle, src[cle]); nouveau[cle] = r.liste; total += r.liste.length; vides += r.vides;
+    }
+    if (!Object.keys(nouveau).length) throw new Error("vide");
+    if (!confirm("Remplacer tes listes actuelles par celles de la sauvegarde (" + total + " éléments) ? Rien n'est mis en ligne tant que tu n'as pas touché « Enregistrer sur le site ».")) return;
+    Object.keys(nouveau).forEach(c => { donnees[c] = nouveau[c]; modifies.add(c); });
+    if (d.don && typeof d.don === "object"){ ["titre", "texte", "merci"].forEach(k => { if (typeof d.don[k] === "string") reglagesDon[k] = d.don[k]; }); modifies.add("don"); remplirReglagesDon(); }
+    if (d.annonce && typeof d.annonce === "object"){ annonce = lireAnnonce(d.annonce); modifies.add("annonce"); remplirAnnonce(); }
+    fermerForm(); rendre();
+    dire($("msgSauv"), total + " éléments importés" + (vides ? " (" + vides + " liens non valides vidés)" : "") + ". Touche « Enregistrer sur le site » pour les mettre en ligne.", "ok");
+  } catch (err) { dire($("msgSauv"), "Fichier non reconnu : choisis une sauvegarde exportée depuis cette page.", "erreur"); }
+};
+
+try {
+  const base = "https://www.gstatic.com/firebasejs/10.12.2/";
+  const { initializeApp } = await import(base + "firebase-app.js");
+  const { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } = await import(base + "firebase-auth.js");
+  const { getDatabase, ref, get, set, onValue } = await import(base + "firebase-database.js");
+  const { initializeAppCheck, ReCaptchaEnterpriseProvider } = await import(base + "firebase-app-check.js");
+
+  const app = initializeApp(firebaseConfig);
+  // App Check : prouve à la base que les appels viennent bien de ce site
+  try { initializeAppCheck(app, { provider: new ReCaptchaEnterpriseProvider("6Le85vItAAAAAEOC7oHnWA4-oSM30-DNIfMApbIN"), isTokenAutoRefreshEnabled: true }); } catch (e) { console.warn("App Check indisponible", e); }
+  const auth = getAuth(app), db = getDatabase(app);
+
+  let charge = false;
+  async function chargerTout(){
+    charge = true; chargementOk = false;
+    const echecs = [];
+    await Promise.all(Object.keys(types).map(async c => {
+      try {
+        const s = await avecDelai(get(ref(db, "contenus/" + c)), 12000);
+        const d = s.exists() ? s.val() : null;
+        const l = d && d.liste ? (Array.isArray(d.liste) ? d.liste : Object.values(d.liste)) : [];
+        donnees[c] = d ? l.filter(Boolean) : JSON.parse(JSON.stringify(PAR_DEFAUT[c] || []));
+      } catch (e) { echecs.push(types[c].titre); }
+    }));
+    try {
+      const s = await avecDelai(get(ref(db, "contenus/annonce")), 12000);
+      annonce = lireAnnonce(s.exists() ? s.val() : null);
+    } catch (e) { echecs.push("Bandeau d'annonce"); }
+    try {
+      const s = await avecDelai(get(ref(db, "contenus/don")), 12000), d = s.exists() ? s.val() : null;
+      reglagesDon = { ...DON_DEFAUT };
+      if (d && typeof d === "object") ["titre", "texte", "merci"].forEach(k => { if (typeof d[k] === "string") reglagesDon[k] = d[k]; });
+    } catch (e) { echecs.push("Textes du don"); }
+    chargementOk = echecs.length === 0;
+    $("bandeauErreur").hidden = chargementOk;
+    if (!chargementOk) $("txtBandeau").textContent = "Impossible de lire la base (" + echecs.join(", ") + "). Pour ne pas écraser tes listes, l'enregistrement est bloqué tant que la lecture échoue. Vérifie ta connexion internet puis touche Réessayer.";
+    else { modifies.clear(); dire($("msgSauv"), ""); }
+    remplirReglagesDon(); remplirAnnonce(); rendre();
+  }
+  $("btnReessayer").onclick = () => { $("txtBandeau").textContent = "Nouvelle tentative..."; chargerTout(); };
+  onValue(ref(db, ".info/connected"), s => { connecte = s.val() === true; majConnexion(); });
+
+  onAuthStateChanged(auth, user => {
+    $("vueLogin").hidden = !!user; $("vueAdmin").hidden = !user;
+    $("barre").hidden = !user; $("btnSortir").hidden = !user; $("lienSite").hidden = !user;
+    if (user){ if (!charge) chargerTout(); } else { charge = false; chargementOk = false; actif = null; $("bandeauErreur").hidden = true; }
+  });
+
+  $("formLogin").onsubmit = async e => {
+    e.preventDefault();
+    const em = $("email").value.trim(), pw = $("mdp").value;
+    if (!em || !pw){ dire($("msgLogin"), "Écris ton e-mail et ton mot de passe.", "erreur"); return; }
+    $("btnLogin").disabled = true; dire($("msgLogin"), "Un instant...");
+    try { await signInWithEmailAndPassword(auth, em, pw); dire($("msgLogin"), ""); $("mdp").value = ""; }
+    catch (err) { dire($("msgLogin"), erreurs[err && err.code] || ("Erreur (" + ((err && err.code) || "inconnue") + ")."), "erreur"); }
+    $("btnLogin").disabled = false;
+  };
+  $("btnSortir").onclick = () => { if (!modifies.size || confirm("Des modifications ne sont pas enregistrées. Se déconnecter quand même ?")) signOut(auth); };
+
+  const texteErreur = err => {
+    const code = (err && (err.code || err.message)) || "";
+    if (code === "lien-annonce") return "Le lien du bandeau d'annonce doit commencer par https:// (ou reste vide).";
+    if (code === "delai") return "Pas de réponse de la base après 15 s" + (connecte ? "." : " (connexion à la base impossible).") + " Tes modifications restent sur cette page : réessaie.";
+    if (/permission/i.test(code)) return "Accès refusé : vérifie ton UID dans les règles de la base.";
+    return "Échec de l'enregistrement (" + code + "). Réessaie.";
+  };
+  $("btnSauver").onclick = async () => {
+    if (!chargementOk) return;
+    const btn = $("btnSauver"); btn.disabled = true;
+    try {
+      for (const c of [...modifies]){
+        $("etat").className = "etat"; $("etat").textContent = "Enregistrement : " + nomModif(c) + "...";
+        if (c === "annonce"){
+          const lien = annonce.lien.trim();
+          if (lien && !/^https:\/\//i.test(lien)) throw Object.assign(new Error("lien"), { code: "lien-annonce" });
+        }
+        const valeur = c === "annonce" ? { texte: annonce.texte.trim(), lien: annonce.lien.trim(), fin: annonce.fin, actif: annonce.actif, maj: Date.now() } : c === "don" ? { titre: reglagesDon.titre, texte: reglagesDon.texte, merci: reglagesDon.merci, maj: Date.now() } : { liste: donnees[c], maj: Date.now() };
+        await avecDelai(set(ref(db, "contenus/" + c), valeur), 15000);
+        modifies.delete(c);
+      }
+      rendre(); $("etat").textContent = "Enregistré. Le site est à jour.";
+    } catch (err) {
+      rendre(); $("etat").className = "etat alerte"; $("etat").textContent = texteErreur(err);
+    }
+  };
+  window.addEventListener("beforeunload", e => { if (modifies.size){ e.preventDefault(); e.returnValue = ""; } });
+} catch (err) {
+  dire($("msgLogin"), "Impossible de joindre Firebase. Vérifie ta connexion internet et réessaie.", "erreur");
+  $("btnLogin").disabled = true;
+}
+</script>
+</body>
+</html>
